@@ -22,34 +22,44 @@ import useBreadcrumbs from "@/lib/useBreadcrumbs";
 import FullContainer from "@/components/common/FullContainer";
 import Container from "@/components/common/Container";
 import Link from "next/link";
-import { Phone, TextQuote } from "lucide-react";
-import { ScrollLink } from "react-scroll";
+import { Phone } from "lucide-react";
+
 import ServiceDescription from "@/components/container/services/ServiceDescription";
+import ServiceDescription1 from "@/components/container/services/ServicwDescription1";
+import ServiceDescription2 from "@/components/container/services/ServicwDescription2";
 import ServiceText from "@/components/container/services/ServiceText";
+
+const capitalizeFirstLetterOfEachWord = (string) => {
+  return string
+    ?.split(" ")
+    ?.map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
+    ?.join(" ");
+};
+
 export default function Service({
   contact_info,
   logo,
-  banner,
   services,
   imagePath,
-  benefits,
   gallery,
   footer,
-  about,
   meta,
   domain,
   favicon,
   locations,
   service_banner,
-  gallery_head,
+  state_,
   faqs,
-  gtmId,
   service_text1,
   service_text2,
   service_description,
+  service_description1,
+  service_description2,
   city_name,
-  service_gallery_head,
+  service_why,
   form_head,
+  features,
+  phone,
 }) {
   const router = useRouter();
   const { service } = router.query;
@@ -61,17 +71,26 @@ export default function Service({
         <meta charSet="UTF-8" />
         <title>
           {meta?.title
-            ?.replaceAll("##service##", service?.replaceAll("-", " "))
-            ?.replaceAll("##city_name##", city_name)}
+            ?.replaceAll(
+              "##service##",
+              capitalizeFirstLetterOfEachWord(service?.replaceAll("-", " "))
+            )
+            ?.replaceAll(
+              "##city_name##",
+              capitalizeFirstLetterOfEachWord(city_name)
+            )}
         </title>
         <meta
           name="description"
-          content={meta?.description?.replaceAll(
-            "##service##",
-            service
-              ?.replaceAll("-", " ")
-              ?.replaceAll("##city_name##", city_name)
-          )}
+          content={meta?.description
+            ?.replaceAll(
+              "##service##",
+              capitalizeFirstLetterOfEachWord(service?.replaceAll("-", " "))
+            )
+            ?.replaceAll(
+              "##city_name##",
+              capitalizeFirstLetterOfEachWord(city_name)
+            )}
         />
         <link rel="author" href={`https://${domain}`} />
         <link rel="publisher" href={`https://${domain}`} />
@@ -103,50 +122,74 @@ export default function Service({
         />
       </Head>
 
-      <Navbar
-        logo={logo}
-        imagePath={imagePath}
-        contact_info={contact_info}
-        data={services}
-      />
+      <Navbar logo={logo} imagePath={imagePath} phone={phone} data={services} />
 
       <ServiceBanner
         data={service_banner?.value}
         image={`${imagePath}/${service_banner?.file_name}`}
         imagePath={imagePath}
-        contact_info={contact_info}
+        phone={phone}
         form_head={form_head}
+        features={features?.value}
       />
       <FullContainer>
         <Container>
           <Breadcrumbs breadcrumbs={breadcrumbs} className="pt-7" />
         </Container>
       </FullContainer>
+
       {service_description?.value && (
         <ServiceDescription
           data={service_description?.value}
           image={`${imagePath}/${service_banner?.file_name}`}
-          contact_info={contact_info}
+          phone={phone}
           service={service}
           city_name={city_name}
+          state_={state_}
         />
       )}
+
       <Gallery
-        contact_info={contact_info}
+        phone={phone}
         gallery={gallery}
-        imagePath={imagePath}
         service={service}
-        data={service_gallery_head}
+        data={service_why?.value}
         city_name={city_name}
+        file_names={service_why?.file_names}
+        imagePath={imagePath}
       />
+
+      {service_description1?.value && (
+        <ServiceDescription1
+          data={service_description1?.value}
+          service={service}
+          city_name={city_name}
+          state_={state_}
+        />
+      )}
+
+      {service_description2?.value && (
+        <ServiceDescription2
+          data={service_description2?.value}
+          phone={phone}
+          service={service}
+          city_name={city_name}
+          state_={state_}
+        />
+      )}
+
       <ServiceText
-        contact_info={contact_info}
+        phone={phone}
         data={service_text1}
         service={service}
         data2={service_text2}
       />
-      <Contact contact_info={contact_info} />
-      <FAQs faqs={faqs} />
+      <div id="quote-form-section">
+        <Contact />
+      </div>
+
+      <FAQs faqs={faqs} city_name={city_name} />
+
       <ServiceCities data={locations} />
       <Footer
         domain={domain}
@@ -154,6 +197,7 @@ export default function Service({
         logo={logo}
         imagePath={imagePath}
         contact_info={contact_info}
+        phone={phone}
       />
 
       {/* Fixed Call Button */}
@@ -161,7 +205,7 @@ export default function Service({
         <div className="w-full bg-gradient-to-b from-green-700 via-lime-600 to-green-600 rounded-md flex flex-col items-center justify-center py-3">
           <Link
             title="Call Button"
-            href={`tel:${contact_info?.phone}`}
+            href={`tel:${phone}`}
             className="flex flex-col text-white items-center justify-center w-full font-barlow"
           >
             <div className="flex items-center mb-1">
@@ -171,7 +215,7 @@ export default function Service({
               </div>
             </div>
             <div className="text-3xl font-semibold">
-              {contact_info?.phone ? contact_info?.phone : "Contact Us"}
+              {phone ? phone : "Contact Us"}
             </div>
           </Link>
         </div>
@@ -180,35 +224,31 @@ export default function Service({
   );
 }
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, params }) {
   const domain = getDomain(req?.headers?.host);
+  const { service } = params; // Extract service name from route parameters
+
   const faqs = await callBackendApi({ domain, tag: "faqs" });
   const service_text1 = await callBackendApi({ domain, tag: "service_text1" });
   const service_text2 = await callBackendApi({ domain, tag: "service_text2" });
-  const gallery_head = await callBackendApi({ domain, tag: "gallery_head" });
   const contact_info = await callBackendApi({ domain, tag: "contact_info" });
   const logo = await callBackendApi({ domain, tag: "logo" });
   const project_id = logo?.data[0]?.project_id || null;
   const imagePath = await getImagePath(project_id, domain);
-  const gtmId = await callBackendApi({ domain, tag: "gtmId" });
-  const gtm_head = await callBackendApi({ domain, tag: "gtm_head" });
-  const gtm_body = await callBackendApi({ domain, tag: "gtm_body" });
-
-  const banner = await callBackendApi({ domain, tag: "banner" });
   const services = await callBackendApi({ domain, tag: "services" });
   const features = await callBackendApi({ domain, tag: "features" });
   const gallery = await callBackendApi({ domain, tag: "gallery" });
-  const about = await callBackendApi({ domain, tag: "about" });
-  const benefits = await callBackendApi({ domain, tag: "benefits" });
-  const testimonials = await callBackendApi({ domain, tag: "testimonials" });
-  const meta = await callBackendApi({ domain, tag: "meta_home" });
+  const meta = await callBackendApi({ domain, tag: "meta_service" });
   const favicon = await callBackendApi({ domain, tag: "favicon" });
   const footer = await callBackendApi({ domain, tag: "footer" });
   const locations = await callBackendApi({ domain, tag: "locations" });
-  const service_gallery_head = await callBackendApi({
+
+  // Updated tag pattern: service-why-furnace-{servicename}
+  const service_why = await callBackendApi({
     domain,
-    tag: "service_gallery_head",
+    tag: `service-why-${service}`,
   });
+
   const service_banner = await callBackendApi({
     domain,
     tag: "service_banner",
@@ -217,6 +257,17 @@ export async function getServerSideProps({ req }) {
     domain,
     tag: "service_description",
   });
+
+  const service_description1 = await callBackendApi({
+    domain,
+    tag: "service_description1",
+  });
+
+  const service_description2 = await callBackendApi({
+    domain,
+    tag: "service_description2",
+  });
+
   const city_name = await callBackendApi({
     domain,
     tag: "city_name",
@@ -225,39 +276,63 @@ export async function getServerSideProps({ req }) {
     domain,
     tag: "form_head",
   });
+  const state_ = await callBackendApi({
+    domain,
+    tag: "state_",
+  });
+
+  let project = null; // Initialize to null to avoid undefined serialization errors
+  if (project_id) {
+    try {
+      const projectInfoResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_MANAGER}/api/public/get_project_info/${project_id}`
+      );
+
+      if (projectInfoResponse.ok) {
+        const projectInfoData = await projectInfoResponse.json();
+        project = projectInfoData?.data || null;
+      } else {
+        console.error(
+          "Failed to fetch project info:",
+          projectInfoResponse.status
+        );
+        project = null;
+      }
+    } catch (error) {
+      console.error("Error fetching project info:", error);
+      project = null;
+    }
+  }
 
   robotsTxt({ domain });
+
+
 
   return {
     props: {
       contact_info: contact_info?.data[0]?.value || null,
-      gallery_head: gallery_head?.data[0]?.value || null,
-      service_gallery_head: service_gallery_head?.data[0]?.value || null,
+      service_why: service_why?.data[0] || null,
       faqs: faqs?.data[0]?.value || null,
       service_text1: service_text1?.data[0]?.value || null,
       service_text2: service_text2?.data[0]?.value || null,
       service_banner: service_banner?.data[0] || null,
-      gtmId: gtmId?.data[0]?.value || null,
-      gtm_head: gtm_head?.data[0]?.value || null,
-      gtm_body: gtm_body?.data[0]?.value || null,
-
+      state_: state_?.data[0]?.value || null,
       domain,
       imagePath,
       logo: logo?.data[0] || null,
-      banner: banner?.data[0] || null,
-      services: services?.data[0]?.value || [],
-      features: features?.data[0] || [],
-      gallery: gallery?.data[0]?.value || [],
-      about: about?.data[0] || null,
-      benefits: benefits?.data[0] || [],
-      testimonials: testimonials?.data[0]?.value || [],
+      services: Array.isArray(services?.data[0]?.value) ? services?.data[0]?.value : [],
+      features: features?.data[0] || null,
+      gallery: Array.isArray(gallery?.data[0]?.value) ? gallery?.data[0]?.value : [],
       meta: meta?.data[0]?.value || null,
       favicon: favicon?.data[0]?.file_name || null,
       footer: footer?.data[0] || null,
-      locations: locations?.data[0]?.value || [],
+      locations: locations?.data[0]?.value || {},
       service_description: service_description?.data[0] || null,
+      service_description1: service_description1?.data[0] || null,
+      service_description2: service_description2?.data[0] || null,
       city_name: city_name?.data[0]?.value || null,
       form_head: form_head?.data[0]?.value || null,
+      phone: project?.phone || null,
     },
   };
 }

@@ -39,6 +39,7 @@ const Logo = ({ logo, imagePath }) => {
   } = logo.value;
 
   const imageSrc = `${imagePath}/${logo.file_name}`;
+  // const imageSrc = `${imagePath}${logo.file_name}`;
 
   const dynamicLogoHeight =
     windowWidth < 768
@@ -54,7 +55,7 @@ const Logo = ({ logo, imagePath }) => {
 
   const logoStyle = {
     height: windowWidth >= 768 ? `${dynamicLogoHeight}px` : "auto",
-    width: windowWidth >= 768 ? `${logoWidth}px` : 148,
+    width: windowWidth >= 768 ? "auto" : 148,
     maxWidth: "100%",
   };
 
@@ -73,6 +74,8 @@ const Logo = ({ logo, imagePath }) => {
           alt={`${logoText || "logo"} - ${hostName}`}
           sizes="(max-width: 768px) 100px, (max-width: 1200px) 150px, 200px"
           style={logoStyle}
+          // unoptimized={true}
+          className="scale-110"
         />
       ) : logoType === "text" ? (
         <h2

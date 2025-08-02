@@ -16,9 +16,10 @@ const capitalizeFirstLetterOfEachWord = (string) => {
 export default function ServiceAbout({
   data,
   image,
-  contact_info,
+  phone,
   service,
   city_name,
+  state_,
 }) {
   const markdown = new MarkdownIt();
   const content = markdown.render(
@@ -31,6 +32,7 @@ export default function ServiceAbout({
         "##city_name##",
         capitalizeFirstLetterOfEachWord(city_name?.replaceAll("-", " "))
       )
+      ?.replaceAll("##state_name##", `, ${state_}`)
   );
 
   return (
@@ -43,8 +45,8 @@ export default function ServiceAbout({
               dangerouslySetInnerHTML={{ __html: content }}
             />
             <div className="hidden md:flex flex-wrap w-full justify-start items-center gap-4 lg:gap-7 pt-5">
-              <CallButton phone={contact_info?.phone} />
-              <QuoteButton phone={contact_info?.phone} />
+              <CallButton phone={phone} />
+              <QuoteButton phone={phone} />
             </div>
           </div>
 

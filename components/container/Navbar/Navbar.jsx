@@ -1,28 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "../../common/Container";
 import Link from "next/link";
 import { Phone, ChevronDown, Menu, X } from "lucide-react";
 import FullContainer from "../../common/FullContainer";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import Logo from "@/components/Logo";
 import { sanitizeUrl } from "@/lib/myFun";
 import CallButton from "@/components/CallButton";
 
-export default function Navbar({ logo, imagePath, contact_info, data }) {
+export default function Navbar({ logo, imagePath, phone, data }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showServices, setShowServices] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const router = useRouter();
+  const pathname = router.pathname;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const router = useRouter();
-  const pathname =
-    typeof window !== "undefined" ? window.location.pathname : "/";
-
   const navLinks = [
     { title: "Locations", link: "locations" },
-    { title: "About Us", link: "about-us" },
     { title: "Contact", link: "contact-us" },
     { title: "FAQs", link: "faqs" },
   ];
@@ -52,25 +55,50 @@ export default function Navbar({ logo, imagePath, contact_info, data }) {
     }
   };
 
-  const scrollDropdown = () => {
-    const dropdown = document.querySelector(".dropdown-services-container");
-    if (dropdown) {
-      dropdown.scrollBy({
-        top: 200,
-        behavior: "smooth",
-      });
-    }
-  };
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <FullContainer className="shadow-sm w-full sticky top-0 z-20 bg-white py-2 h-[82px] md:h-[112px]">
+        <Container>
+          <div className="flex flex-row justify-between h-full items-center w-full md:pr-8">
+            <div className="h-full flex items-center justify-center">
+              <Logo logo={logo} imagePath={imagePath} />
+            </div>
+            <div className="flex items-center justify-end flex-row">
+              <div className="flex flex-col gap-1 md:gap-2 justify-center items-center">
+                <div className="text-xs">
+                  <CallButton phone={phone} />
+                </div>
+                <h2 className="text-primary font-bold lg:text-lg md:text-[25px] font-barlow leading-none">
+                  Call Us Today
+                </h2>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </FullContainer>
+    );
+  }
 
   return (
     <FullContainer className="shadow-sm w-full sticky top-0 z-20 bg-white py-2 h-[82px] md:h-[112px]">
       <Container>
         <div className="flex flex-row justify-between h-full items-center w-full  md:pr-8">
-          <div className="h-full flex items-center justify-center ">
-            <Logo logo={logo} imagePath={imagePath} />
-          </div>
+          <Logo logo={logo} imagePath={imagePath} />
 
           <div className="hidden lg:flex items-center text-[26px] font-barlow justify-center font-semibold gap-4 ">
+            <Link
+              href="/"
+              className="cursor-pointer text-black hover:text-[#002B5B] transition-colors"
+            >
+              Home
+            </Link>
+            <button
+              onClick={() => handleNavigation("locations")}
+              className="cursor-pointer text-black hover:text-[#002B5B] transition-colors"
+            >
+              Locations
+            </button>
             <div
               className="relative h-full"
               onMouseEnter={() => setShowServices(true)}
@@ -86,70 +114,64 @@ export default function Navbar({ logo, imagePath, contact_info, data }) {
               </button>
 
               <div
-                className={`absolute top-full left-0 w-auto min-w-[300px] bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)] py-4 
-                transition-all duration-300 ease-in-out flex flex-col lg:max-h-[540px]
+                className={`absolute top-full left-0 w-auto min-w-[300px] bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]
+                transition-all duration-300 ease-in-out flex flex-col
                 ${
                   showServices
                     ? "opacity-100 visible transform translate-y-0"
                     : "opacity-0 invisible transform -translate-y-2"
                 }`}
               >
-                <div
-                  className="flex-grow dropdown-services-container overflow-y-auto scrollbar-hide"
-                  style={{
-                    scrollbarWidth: "none",
-                    msOverflowStyle: "none",
-                    "::-webkit-scrollbar": { display: "none" },
-                  }}
-                >
-                  {data?.map((service, index) => (
-                    <Link
-                      title={service?.title}
-                      key={index}
-                      href={sanitizeUrl(service?.title)}
-                      className="text-black text-xl py-1 font-medium px-4 hover:bg-primary hover:text-white cursor-pointer transition-all duration-100 block"
-                    >
-                      {service?.title}
-                    </Link>
-                  ))}
-                </div>
-
-                <div className="sticky bottom-0 w-full bg-white py-2 mt-2 flex justify-center border-t">
-                  <div
-                    className="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:bg-[#002B5B] transition-colors"
-                    onClick={scrollDropdown}
-                  >
-                    <ChevronDown className="w-5 h-5 text-white" />
-                  </div>
+                <div className="flex-grow dropdown-services-container scrollbar-hide">
+                  {(Array.isArray(data) ? data : [])?.map((service, index) => {
+                    const serviceUrl = sanitizeUrl(service?.title);
+                    return (
+                      <Link
+                        title={service?.title}
+                        key={index}
+                        href={serviceUrl}
+                        className={`text-xl py-1 font-semibold px-4 cursor-pointer transition-all duration-100 block ${
+                          pathname === `/${serviceUrl}`
+                            ? "bg-[#002B5B] text-white"
+                            : "text-black hover:bg-primary hover:text-white"
+                        }`}
+                      >
+                        {service?.title}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
-            {navLinks.map((item, index) => (
-              <button
-                key={index}
-                onClick={() => handleNavigation(item.link)}
-                className="cursor-pointer text-black hover:text-[#002B5B] transition-colors"
-              >
-                {item.title}
-              </button>
-            ))}
+            <button
+              onClick={() => handleNavigation("faqs")}
+              className="cursor-pointer text-black hover:text-[#002B5B] transition-colors"
+            >
+              FAQs
+            </button>
+            <button
+              onClick={() => handleNavigation("contact-us")}
+              className="cursor-pointer text-black hover:text-[#002B5B] transition-colors"
+            >
+              Contact Us
+            </button>
           </div>
 
           <div className=" flex items-center justify-end flex-row">
             <div className="flex flex-col gap-1 md:gap-2 justify-center items-center">
-              <div className="">
-                <CallButton phone={contact_info?.phone} />
+              <div className=" text-xs ">
+                <CallButton phone={phone} />
               </div>
               <h2
-                className={`text-primary font-bold text-lg md:text-[25px] font-barlow leading-none`}
+                className={`text-primary font-bold lg:text-lg md:text-[25px] font-barlow leading-none`}
               >
                 Call Us Today
               </h2>
             </div>
 
             <div
-              className="hidden text-white pl-5 cursor-pointer"
+              className="lg:hidden text-white pl-5 cursor-pointer"
               onClick={toggleMenu}
             >
               {isOpen ? (
@@ -203,7 +225,7 @@ export default function Navbar({ logo, imagePath, contact_info, data }) {
 
             {showServices && (
               <div className=" mt-2 flex flex-col max-h-[300px] overflow-y-auto gap-2">
-                {data?.map((service, index) => {
+                {(Array.isArray(data) ? data : [])?.map((service, index) => {
                   const serviceUrl = sanitizeUrl(service?.title);
                   return (
                     <Link

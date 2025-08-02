@@ -26,7 +26,7 @@ export default {
         ],
       },
       gridTemplateColumns: {
-        banner: "1fr 1fr,0.7fr",
+        banner: "1fr 0.7fr",
         services: "1fr 1.4fr",
         services2: "1fr 1fr",
         testimonial:" 0.4fr 2fr "

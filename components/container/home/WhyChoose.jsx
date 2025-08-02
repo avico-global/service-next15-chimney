@@ -16,7 +16,7 @@ import {
 import FullContainer from "@/components/common/FullContainer";
 import Link from "next/link";
 
-export default function WhyChoose({ image, contact_info, phone, data }) {
+export default function WhyChoose({ image, phone, data }) {
   const iconMap = {
     Clock,
     Star,
@@ -31,12 +31,12 @@ export default function WhyChoose({ image, contact_info, phone, data }) {
   };
 
   return (
-    <FullContainer className="py-8 md:py-12 bg-white mt-4">
+    <FullContainer id="whychooseus" className="py-8 md:py-12 bg-white mt-4">
       <Container>
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
           {/* Left: Text & Features */}
           <div className="w-full md:w-5/12 flex flex-col items-start justify-center">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#1A2956] mb-4">
+            <h2 className="text-4xl font-extrabold text-[#1A2956] mb-4">
               Why Choose Us
             </h2>
             <ul className="mb-6 space-y-3">
@@ -57,7 +57,7 @@ export default function WhyChoose({ image, contact_info, phone, data }) {
             </ul>
             <div className="flex flex-col sm:flex-row gap-4 w-full mt-2">
               <a
-                href={`tel:${contact_info?.phone}`}
+                href={`tel:${phone}`}
                 className="flex items-center justify-center sm:justify-start gap-2 px-6 py-3 rounded-full bg-[#1A2956] text-white font-semibold text-lg shadow hover:bg-[#22397a] transition-all"
               >
                 <Phone className="w-5 h-5" />

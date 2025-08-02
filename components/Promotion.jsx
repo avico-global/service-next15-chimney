@@ -35,7 +35,7 @@ const PromotionCard = ({
 }) => {
   return (
     <div
-      className={`relative flex flex-col h-full border-2 border-dashed border-blue-950 rounded-md p-8 transition-all duration-200 ${
+      className={`relative flex flex-col h-full border-2 border-dashed border-blue-950 rounded-md p-6 transition-all duration-200 ${
         isMainCard
           ? "bg-blue-950 text-white shadow-xl z-10 scale-105"
           : "bg-white text-blue-950"
@@ -61,15 +61,43 @@ const PromotionCard = ({
             </span>
           </div>
           {serviceTitle && (
-            <div className="uppercase text-lg font-bold mt-2 leading-tight">
+            <div className="uppercase text-2xl font-semibold mt-2 leading-tight">
               {serviceTitle}
             </div>
           )}
           {originalPrice && (
             <div className="mt-2 text-lg font-semibold">
               <span>ORIGINAL PRICE </span>
-              <span className="line-through text-red-500 text-2xl ml-1">
-                ${originalPrice}
+              <span className="relative inline-block align-middle">
+                <span
+                  className={`${
+                    isMainCard ? "text-white" : "text-blue-950"
+                  } text-2xl font-extrabold`}
+                >
+                  ${originalPrice}
+                </span>
+
+                <svg
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-14 h-[0.25em] pointer-events-none"
+                  width="100%"
+                  height="0.25em"
+                  viewBox="0 0 100 8"
+                  preserveAspectRatio="none"
+                  style={{
+                    minWidth: 40,
+                    minHeight: 8,
+                    transform: "rotate(-25deg)",
+                  }}
+                >
+                  <line
+                    x1="0"
+                    y1="7"
+                    x2="100"
+                    y2="1"
+                    stroke="#FF0000"
+                    strokeWidth="3"
+                  />
+                </svg>
               </span>
             </div>
           )}
@@ -78,7 +106,7 @@ const PromotionCard = ({
       )}
 
       <div className="space-y-3 flex-1">
-        {features?.map((feature, index) => (
+        {(Array.isArray(features) ? features : [])?.map((feature, index) => (
           <div
             key={index}
             className={`flex items-start gap-2 text-sm font-medium ${
@@ -110,13 +138,13 @@ const FullMonthPromotion = ({ prices }) => {
   const hasWhyChooseUs = !!prices?.why_choose_us;
 
   return (
-    <FullContainer>
+    <FullContainer id="promo">
       <Container>
         <div className="w-full py-12">
-          <h2 className="text-4xl font-extrabold text-center text-blue-950 mb-12 tracking-tight">
+          <h2 className="text-4xl font-extrabold text-center text-blue-950 mb-8 tracking-tight">
             Full Month Promotion
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 w-full">
             {/* Left Card - Either Why Choose Us or Price3 */}
             {hasWhyChooseUs ? (
               <PromotionCard

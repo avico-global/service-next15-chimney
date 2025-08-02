@@ -3,6 +3,7 @@ import Container from "../common/Container";
 import Heading from "../common/Heading";
 import Logo from "@/components/Logo";
 import Image from "next/image";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 const Testimonials = ({ data, logo, imagePath }) => {
   const testimonials = data?.list || [];
@@ -204,23 +205,23 @@ const Testimonials = ({ data, logo, imagePath }) => {
 
   return (
     <>
-      <section className="testimonials-section py-6 md:py-6 bg-white">
-        <Container className="mx-auto px-4">
-          <div className="text-center mb-6 md:mb-8">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#002B5B] mb-2">
+      <section className="testimonials-section pt-6 md:pt-6 bg-white">
+        <Container className="mx-auto px-4 ">
+          <div className="text-center mb-6">
+            <h2 className="text-4xl font-extrabold text-[#002B5B] mb-2">
               Our Happy Clients
             </h2>
           </div>
 
-          <div className="flex gap-10">
-            <div className="flex items-center justify-between mb-6 md:mb-8">
-              <div className="flex items-center gap-2 md:gap-4">
-                {logo.value.type === "image" && (
-                  <div className="w-[120px] md:w-[160px] h-auto flex flex-col">
+          <div className="flex flex-col md:flex-row gap-10 relative h-[340px]">
+            <div className="flex items-center justify-between mb-1 md:mb-8">
+              <div className="flex items-center gap-4">
+                {logo.value.logoType === "image" && (
+                  <div className="md:w-[160px] h-auto flex flex-col">
                     <Logo logo={logo} imagePath={imagePath} />
                   </div>
                 )}
-                <div className="flex flex-col w-32">
+                <div className="flex flex-col flex-1 md:w-32">
                   <p className="text-gray-600 font-bold text-xl md:text-3xl capitalize">
                     {logo.value.logoText}
                   </p>
@@ -241,22 +242,22 @@ const Testimonials = ({ data, logo, imagePath }) => {
               </div>
             </div>
 
-            <div className="relative h-[250px] md:h-80 w-full flex-1">
+            <div className="relative md:h-80 w-full flex-1">
               {/* Navigation Arrows */}
-              <div className="hidden md:flex w-full absolute items-center justify-between z-20 h-full pointer-events-none">
+              <div className="hidden md:flex w-full absolute items-center justify-between z-10 h-full pointer-events-none">
                 <button
                   onClick={() => handleArrowClick("prev")}
                   className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 hover:bg-primary hover:text-white transition-colors shadow-md pointer-events-auto"
                   aria-label="Previous testimonial"
                 >
-                  ←
+                  <ChevronLeftIcon className="w-6 h-6" />
                 </button>
                 <button
                   onClick={() => handleArrowClick("next")}
                   className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 hover:bg-primary hover:text-white transition-colors shadow-md pointer-events-auto"
                   aria-label="Next testimonial"
                 >
-                  →
+                  <ChevronRightIcon className="w-6 h-6" />
                 </button>
               </div>
 
@@ -278,7 +279,7 @@ const Testimonials = ({ data, logo, imagePath }) => {
                 </div>
               )} */}
 
-              <div className="testimonial-slider-container overflow-hidden mb-8 absolute h-[280px] md:h-72 top-0 w-full">
+              <div className="testimonial-slider-container overflow-hidden mb-80 md:mb-8 absolute h-[280px] md:h-72 top-0 w-full">
                 <div
                   ref={sliderRef}
                   className={`testimonial-slider ${
@@ -298,7 +299,7 @@ const Testimonials = ({ data, logo, imagePath }) => {
                       <div className="flex-1 p-4 md:p-5 rounded-xl bg-[#f4f4f4] shadow-md h-full border border-gray-100 hover:shadow-lg transition-shadow duration-300">
                         {/* Profile and Google Icon Header */}
                         <div className="flex items-center justify-between mb-2 md:mb-3">
-                          <div className="flex items-center gap-2 md:gap-3">
+                          <div className="flex gap-2 md:gap-3">
                             <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden relative border-2 border-primary">
                               <Image
                                 src={testimonial.avatar || defaultAvatar}
@@ -309,10 +310,21 @@ const Testimonials = ({ data, logo, imagePath }) => {
                                 unoptimized
                               />
                             </div>
-                            <div>
+                            <div className="flex-1">
                               <h4 className="text-gray-800 font-semibold text-sm md:text-base">
                                 {testimonial.name}
                               </h4>
+                              {/* Star Rating */}
+                              <div className="flex gap-0.5 mb-2">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <span
+                                    key={star}
+                                    className="text-yellow-500 text-sm md:text-base"
+                                  >
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
                               <p className="text-gray-500 text-xs">
                                 {testimonial.date || "2025-03-17"}
                               </p>
@@ -328,20 +340,8 @@ const Testimonials = ({ data, logo, imagePath }) => {
                           </div>
                         </div>
 
-                        {/* Star Rating */}
-                        <div className="flex gap-0.5 mb-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className="text-yellow-500 text-sm md:text-base"
-                            >
-                              ★
-                            </span>
-                          ))}
-                        </div>
-
                         {/* Review Text */}
-                        <p className="text-gray-800 text-xs md:text-sm leading-relaxed italic line-clamp-5 md:line-clamp-none">
+                        <p className="text-gray-800 text-xs md:text-sm leading-relaxed line-clamp-5 md:line-clamp-none">
                           "{testimonial.quote || testimonial.text}"
                         </p>
                       </div>

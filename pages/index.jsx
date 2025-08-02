@@ -130,12 +130,12 @@ export default function Home({
         />
         <Banner
           data={banner?.value}
-          image={`${imagePath}/${banner?.file_name}`}
+          // image={`${imagePath}/${banner?.file_name}`}
+          image="/img/banner.webp"
           imagePath={imagePath}
-          phone={phone}
+          contact_info={contact_info}
           form_head={form_head}
           features={features?.value}
-          niche={niche}
         />
 
         <FullMonthPromotion why_us={why_us} prices={prices} />

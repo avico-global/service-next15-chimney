@@ -21,7 +21,6 @@ import { useRouter } from "next/router";
 export default function TermsAndConditions({
   logo,
   imagePath,
-  phone,
   services,
   domain,
   favicon,
@@ -31,6 +30,7 @@ export default function TermsAndConditions({
   contact_info,
   city_name,
 }) {
+  const phone = contact_info?.phone || null;
   const markdownIt = new MarkdownIt();
   const content = markdownIt.render(
     terms
@@ -169,7 +169,6 @@ export async function getServerSideProps({ req }) {
       terms: terms?.data[0]?.value || null,
       contact_info: contact_info?.data[0]?.value || null,
       city_name: city_name?.data[0]?.value || null,
-      phone: project?.phone || null,
     },
   };
 }

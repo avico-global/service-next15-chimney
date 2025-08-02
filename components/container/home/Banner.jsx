@@ -26,6 +26,8 @@ export default function Banner({
   form_head,
   features,
 }) {
+  console.log("image", image);
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",

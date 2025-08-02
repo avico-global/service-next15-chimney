@@ -52,7 +52,7 @@ export default function Home({
   city_name,
   project,
 }) {
-  const phone = project?.phone || null;
+  const phone = contact_info?.phone || null;
   const gtm_id = project?.additional_config?.gtm_id || null;
   const niche = project?.domain_id?.niche_id?.name || null;
 
@@ -130,8 +130,7 @@ export default function Home({
         />
         <Banner
           data={banner?.value}
-          // image={`${imagePath}/${banner?.file_name}`}
-          image="/img/banner.webp"
+          image={`${imagePath}/${banner?.file_name}`}
           imagePath={imagePath}
           contact_info={contact_info}
           form_head={form_head}

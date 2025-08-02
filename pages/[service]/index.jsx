@@ -59,14 +59,16 @@ export default function Service({
   service_why,
   form_head,
   features,
-  phone,
 }) {
+
   const router = useRouter();
   const { service } = router.query;
   const breadcrumbs = useBreadcrumbs();
+  const phone = contact_info?.phone || null;
+  console.log("phone", phone);
 
   return (
-    <div>
+    <div> 
       <Head>
         <meta charSet="UTF-8" />
         <title>
@@ -332,7 +334,6 @@ export async function getServerSideProps({ req, params }) {
       service_description2: service_description2?.data[0] || null,
       city_name: city_name?.data[0]?.value || null,
       form_head: form_head?.data[0]?.value || null,
-      phone: project?.phone || null,
     },
   };
 }

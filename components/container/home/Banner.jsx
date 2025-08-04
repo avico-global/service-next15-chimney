@@ -18,6 +18,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import CallButton from "@/components/CallButton";
+import QuoteForm from "@/components/common/QuoteForm";
 
 export default function Banner({
   image,
@@ -26,8 +27,6 @@ export default function Banner({
   form_head,
   features,
 }) {
-  console.log("image", image);
-
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -156,8 +155,8 @@ export default function Banner({
   };
 
   return (
-    <FullContainer className="relative bg-white overflow-hidden md:!h-[790px] lg:!h-auto">
-      <div className="absolute inset-0 h-[600px] md:min-h-[790px] overflow-hidden">
+    <FullContainer className="relative bg-white overflow-hidden w-full md:!h-[790px] lg:!h-auto">
+      <div className="absolute inset-0 w-full h-[600px] md:min-h-[790px] overflow-hidden">
         <Image
           src={image}
           title={data?.imageTitle || data?.title || "Banner"}
@@ -165,22 +164,17 @@ export default function Banner({
           priority={true}
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="w-full object-cover object-center"
         />
       </div>
 
       <Container className="py-20 font-barlow relative z-10 mt-10 md:mt-0">
-        <div className="w-full grid grid-cols-1 md:grid-cols-banner gap-2 md:gap-[66px] text-white">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-banner gap-16 md:gap-[66px] text-white">
           <div className="relative -mt-10 flex items-center md:items-start flex-col justify-center">
-            <div className="bg-gradient-to-br  from-blue-800 to-sky-300 rounded-full text-5xl md:text-7xl font-bold aspect-square h-28 md:h-32 w-28 md:w-32 flex items-center justify-center">
-              <sup className="text-3xl">$</sup>
-              {data?.price || "80"}
-            </div>
-            <p className="text-center md:text-start lg:text-left text-xl md:text-3xl font-semibold mt-3 text-[#90D4E1]">
-              Special Complete Inspection
+            <p className="text-center md:text-start lg:text-left font-semibold mt-3 text-[#90D4E1]">
+              # Your Top-rated Chimney Sweep and Chimney Repair Company
             </p>
-
-            <h1 className="font-[900] uppercase text-[28px] mt-3 px-4 md:px-0 md:text-6xl leading-tight text-center md:text-start lg:text-left  text-shadow-lg">
+            <h1 className="font-[900] uppercase text-4xl lg:text-[54px] mt-3 px-4 md:px-0 md:text-6xl leading-tight text-center md:text-start lg:text-left  text-shadow-lg">
               {data?.title}
             </h1>
             <h2 className="text-[28px] md:px-0 md:text-6xl uppercase font-[900] leading-tight text-[#90D4E1] text-center md:text-start lg:text-left mt-2">
@@ -207,131 +201,19 @@ export default function Banner({
               })}
             </ul>
             <div className="">
-              <CallButton phone={contact_info?.phone} />
+              <button className="flex items-center gap-3 bg-gradient-to-br from-blue-800 via-sky-500 from-20% to-green-400 text-white px-6 py-3 rounded-full text-3xl font-semibold">
+                <Phone className="w-6 h-6" />
+                {contact_info?.phone}
+              </button>
             </div>
           </div>
 
-          <div className="flex flex-col justify-center px-3 ">
-            <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.4)] relative font-barlow rounded-[15px] px-4 md:px-10 pb-8 md:pb-10 pt-10 md:pt-14">
-              <h3 className="text-3xl md:text-4xl leading-7 md:leading-[30px] font-bold text-center mb-2 text-primary">
-                {form_head?.title || "10% Off Total Price for Online Booking"}
-              </h3>
-              <h4 className="text-lg pt-3 font-bold text-center mb-6 text-[#11121A]">
-                {form_head?.sub_title || "Request a Quote"}
-              </h4>
-
-              {formSubmitted ? (
-                <div className="flex flex-col items-center justify-center text-center py-6">
-                  <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
-                    Thank You!
-                  </h3>
-                  <p className="text-gray-600 max-w-md">
-                    Your request has been submitted successfully. We'll contact
-                    you shortly with your personalized quote.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-3 text-black">
-                  <div className="grid grid-cols-2 gap-[10px]">
-                    <input
-                      type="text"
-                      id="first_name"
-                      name="first_name"
-                      value={formData.first_name}
-                      onChange={handleChange}
-                      className="w-full pl-3 py-2 bg-white border border-gray-200 rounded-md outline-none placeholder:text-gray-600"
-                      placeholder="First name"
-                      required
-                    />
-                    <input
-                      type="text"
-                      id="last_name"
-                      name="last_name"
-                      value={formData.last_name}
-                      onChange={handleChange}
-                      className="w-full pl-3 py-2 bg-white border border-gray-200 rounded-md outline-none placeholder:text-gray-600"
-                      placeholder="Last name"
-                      required
-                    />
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className={`w-full pl-3 py-2 bg-white border border-gray-200 rounded-md outline-none placeholder:text-gray-600 ${
-                        fieldErrors.phone ? "border-red-500" : "border-gray-200"
-                      }`}
-                      placeholder="(123) 456-7890"
-                      required
-                    />
-                    <input
-                      type="text"
-                      id="zip"
-                      name="zip"
-                      value={formData.zip}
-                      onChange={handleChange}
-                      className={`w-full pl-3 py-2 bg-white border border-gray-200 rounded-md outline-none placeholder:text-gray-600 ${
-                        fieldErrors.zip ? "border-red-500" : "border-gray-200"
-                      }`}
-                      placeholder="Zip Code"
-                      required
-                    />
-                  </div>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full pl-3 py-2 bg-white border border-gray-200 rounded-md outline-none placeholder:text-gray-600 ${
-                      fieldErrors.email ? "border-red-500" : "border-gray-200"
-                    }`}
-                    placeholder="your@email.com"
-                    required
-                  />
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows="3"
-                    className={`w-full pl-3 py-2 max-h-[75px] bg-white border border-gray-200 rounded-md outline-none placeholder:text-gray-600 ${
-                      fieldErrors.message ? "border-red-500" : "border-gray-200"
-                    }`}
-                    placeholder="Message"
-                    required
-                  ></textarea>
-
-                  {error && (
-                    <div className="text-red-500 text-sm font-medium">
-                      {error}
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-[#6B9FE4] hover:bg-[#5B88C4] text-black py-3 px-6 rounded-md font-medium transition-colors duration-200 flex items-center justify-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader className="animate-spin mr-2 h-4 w-4" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        GET A QUOTE
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
+          <div className="flex items-center justify-center">
+            <QuoteForm
+              data={data}
+              form_head={form_head}
+              showArrowInButton={false}
+            />
           </div>
         </div>
       </Container>

@@ -297,12 +297,26 @@ export default function QuoteForm({
   };
 
   return (
-    <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.4)] relative font-barlow rounded-[15px] px-4 md:px-10 pb-8 md:pb-10 pt-10 md:pt-14">
-     
-     
-      <div className="bg-gradient-to-br absolute -top-10 -left-5 md:-left-10 from-blue-800 via-sky-400 from-20% to-green-400 rounded-full p-3 text-4xl md:text-5xl font-bold aspect-square h-20 w-20 md:h-24 md:w-24 flex items-center justify-center text-white">
-        <sup className="text-xl">$</sup>
-        {data?.price || "89"}
+    <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.4)] relative font-barlow rounded-[15px] h-fit px-4 md:px-7 py-5 md:py-7 mx-9 md:w-[370px]">
+      <div className="flex items-center justify-center md:justify-start gap-3 md:pl-0">
+        <div
+          className={`${
+            data?.price !== "Free Estimate"
+              ? "text-4xl md:text-5xl h-20 md:h-24 w-20 md:w-24 rounded-full"
+              : "text-2xl text-center drop-shadow-lg uppercase font-poppins h-20 w-32 md:h-20 md:w-44 rounded-full"
+          } font-bold aspect-square flex items-center justify-center bg-gradient-to-br from-blue-800 via-sky-500 from-20% to-green-400 absolute -top-8 lg:-top-10 -left-7 lg:-left-14`}
+        >
+          {data?.price !== "Free Estimate" && (
+            <sup className="text-xl lg:text-2xl">$</sup>
+          )}
+          {data?.price !== "Free Estimate" ? (
+            data?.price || "89"
+          ) : (
+            <span className="flex items-center gap-2 relative">
+              Free <br /> Estimate
+            </span>
+          )}
+        </div>
       </div>
 
       {!formSubmitted && (
@@ -334,8 +348,8 @@ export default function QuoteForm({
           </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3 text-black">
-          <div className="grid grid-cols-2 gap-[10px]">
+        <form onSubmit={handleSubmit} className="space-y-2.5 text-black">
+          <div className="grid grid-cols-2 gap-[8px]">
             <div>
               <input
                 type="text"

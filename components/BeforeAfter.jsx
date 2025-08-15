@@ -6,7 +6,7 @@ import FullContainer from "./common/FullContainer";
 import arrow from "../public/st-images/arrowhead.jpg";
 
 export default function BeforeAfter({ project_id, niche }) {
-  const chimeny = [
+  const chimney = [
     {
       before: "/st-images/beforeafter/chimeny/before1.webp",
       before_alt: "before",
@@ -220,9 +220,8 @@ export default function BeforeAfter({ project_id, niche }) {
     },
   ];
 
-
-  let selectedImage = carpet;
-  if (niche === "Chimney Cleaning") selectedImage = chimeny;
+  let selectedImage = chimney;
+  if (niche === "Chimney Cleaning") selectedImage = chimney;
   else if (niche === "Air Conditioning") selectedImage = airduct;
   else if (niche === "Dryervent Cleaning") selectedImage = dryervent;
   else if (niche === "Carpet Cleaning") selectedImage = carpet;
@@ -231,7 +230,6 @@ export default function BeforeAfter({ project_id, niche }) {
   else if (niche === "water damage") selectedImage = waterDamage;
   else if (niche === "Construction") selectedImage = construction;
 
-  
   return (
     <FullContainer>
       <Container className="pb-16 pt-6 ">
